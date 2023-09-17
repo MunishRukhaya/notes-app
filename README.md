@@ -17,7 +17,7 @@ JSON format in which data is to be given in the body:
 ```
 - Email shoud be unique.
 - Password length shoud be at least 8.
-- 
+  
 **LOGIN**
 
 Login after signing up at the URL - [Login](https://munish-notes-app.onrender.com/auth/login)
