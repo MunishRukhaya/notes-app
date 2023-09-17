@@ -3,7 +3,7 @@
  Deployed Build - https://munish-notes-app.onrender.com
 
 SIGNUP-
-Signup using at the URL- https://munish-notes-app.onrender.com/auth/signup/
+Signup using at the URL- [Signup](https://munish-notes-app.onrender.com/auth/signup/)
 JSON format in which data is to be given in body->
 {
 "name":"test",
