@@ -14,6 +14,7 @@ JSON format in which data is to be given in the body:
   "password": "12345678",
   "confirmPassword": "12345678"
 }
+```
 -Email should be unique.
 -Password length should be at least 8.
 
