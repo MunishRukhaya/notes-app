@@ -36,3 +36,16 @@ JSON format in which data is to be given in the body with POST request:
 
 
 **CRUD OPERATIONS**
+   1. GET ALL NOTES-
+   - User can access all their notes at the URL /user/notes/ [Notes](https://munish-notes-app.onrender.com/user/notes)
+   - User will have to make a GET request at the URL.
+
+   2. ADD A NEW NOTE-
+   - User can add a new note at the URL /user/notes/new/ [Add a new Note](https://munish-notes-app.onrender.com/user/notes/new)
+   - User will have to make a POST request at the URL.
+   ```json
+   {
+     "title":"SOME RANDOM TITLE",
+     "body":"NOTE BODY"
+   }
+   ```
