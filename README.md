@@ -17,7 +17,7 @@ JSON format in which data is to be given in the body:
 ```
 **LOGIN**
 
-Login after signing up at the URL - [https://munish-notes-app.onrender.com/auth/login](https://munish-notes-app.onrender.com/auth/login)
+Login after signing up at the URL - [Login](https://munish-notes-app.onrender.com/auth/login)
 
 JSON format in which data is to be given in the body:
 ```json
