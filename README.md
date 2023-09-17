@@ -34,6 +34,13 @@ JSON format in which data is to be given in the body with POST request:
 - JWT authentication system is used to login the user.
 - JWT tokens are stored in browser using cookies to keep the user logged in.
 
+**DELETE USER**
+
+Delete the user at the URL - [Delete](https://munish-notes-app.onrender.com/user/delete)
+
+- User can be deleted from the database with DELETE request.
+- All notes of the user will alsobe deleted.
+
 
 **CRUD OPERATIONS**
    1. GET ALL NOTES-
