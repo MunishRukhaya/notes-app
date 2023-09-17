@@ -1,4 +1,4 @@
- Notes app in which user can signup with a unique email and can access the API after signing in. Passwords are stored in database in hashed form(using bcrypt). CRUD operations can be performed on the notes by the user with their respective accounts. Tech stack used is- Node.js, Express.js, MongoDB, Mongoose.
+``` Notes app in which user can signup with a unique email and can access the API after signing in. Passwords are stored in database in hashed form(using bcrypt). CRUD operations can be performed on the notes by the user with their respective accounts. Tech stack used is- Node.js, Express.js, MongoDB, Mongoose.
 
  Deployed Build - https://munish-notes-app.onrender.com
 
@@ -25,4 +25,4 @@ JSON format in which data is to be given in body->
 
 
 CRUD OPERATIONS-
- 
+ ```
