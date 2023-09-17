@@ -10,7 +10,7 @@ const JWT_KEY = 'rpo3vmompk2zompc3q983ujf';
 
 const mongoose = require('mongoose');
 const uri = "mongodb+srv://munishrukhaya:mongo-munish@cluster0.vxrnulk.mongodb.net/?retryWrites=true&w=majority"
-mongoose.connect(uri).then(() => { console.log({ message: 'mongoose connected' }) })
+mongoose.connect(uri).then(console.log('mongoose connected'));
 
 const User = require('./models/userModel');
 const Note = require('./models/noteModel');
@@ -25,6 +25,10 @@ app.use(cookieParser())
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/user/notes', notesRouter)
+
+app.get('/', (req, res)=> {
+    res.redirect('/auth/signup');
+})
 
 const postSignup = async (req, res) => {
     const existingUser = await User.findOne({ email: req.body.email });
@@ -129,4 +133,4 @@ notesRouter
 
 
 
-app.listen(5000);
+app.listen(process.env.PORT ||5000);
