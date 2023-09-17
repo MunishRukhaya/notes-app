@@ -117,6 +117,13 @@ authRouter
     .route('/login')
     .post(postLogin)
 
+    userRouter.route('/delete').post(async (req, res)=>{
+        const token = req.cookies.login.split('.')[1];
+    const stringId = Buffer.from(token, 'base64').toString('utf8');
+    const uid = JSON.parse(stringId).uid;
+    User.deleteOne({_id:uid}).then(res.status(400).send({message:`User with ID:${uid} has been deleted`}))
+    })
+
 notesRouter
     .route('/new')
     .post(newNote)
@@ -129,6 +136,9 @@ notesRouter
     .route('/:_id')
     .get(getNotebyId)
 
+    notesRouter.route('/:_id').put((req, res)=>{
+        
+    })
 
 
 
