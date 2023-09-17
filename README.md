@@ -15,8 +15,17 @@ JSON format in which data is to be given in the body:
   "confirmPassword": "12345678"
 }
 ```
--Email should be unique.
--Password length should be at least 8.
+**LOGIN**
+
+Login after signing up at the URL - [https://munish-notes-app.onrender.com/auth/login](https://munish-notes-app.onrender.com/auth/login)
+
+JSON format in which data is to be given in the body:
+```json
+{
+  "email": "test@test.com",
+  "password": "12345678"
+}
+
 
 
 
