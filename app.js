@@ -5,12 +5,12 @@ const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const JWT_KEY = "rpo3vmompk2zompc3q983ujf";
-
+const dotenv  = require('dotenv');
+dotenv.config();
 //MONGOOSE EXPORTS
 
 const mongoose = require("mongoose");
-const uri =
-    "mongodb+srv://munishrukhaya:mongo-munish@cluster0.vxrnulk.mongodb.net/?retryWrites=true&w=majority";
+const uri =process.env.MONGO_CLIENT;
 mongoose.connect(uri).then(console.log("mongoose connected"));
 
 const User = require("./models/userModel");
@@ -150,4 +150,4 @@ notesRouter
     .route("/:_id")
     .put((req, res) => { });
 
-app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT);
