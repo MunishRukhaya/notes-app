@@ -1,114 +1,28 @@
 //MODULE IMPORTS
 const express = require("express");
-const bcrypt = require("bcrypt");
 const app = express();
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const JWT_KEY = "rpo3vmompk2zompc3q983ujf";
+app.use(cookieParser());
 const dotenv  = require('dotenv');
 dotenv.config();
+const jwt = require('jsonwebtoken');
+
 //MONGOOSE EXPORTS
-
 const mongoose = require("mongoose");
-const uri =process.env.MONGO_CLIENT;
-mongoose.connect(uri).then(console.log("mongoose connected"));
+mongoose.connect(process.env.MONGO_CLIENT).then(()=>{console.log("mongoose connected")});
 
-const User = require("./models/userModel");
-const Note = require("./models/noteModel");
-
-const userRouter = express.Router();
-const authRouter = express.Router();
-const notesRouter = express.Router();
-
-app.use(express.json());
-app.use(cookieParser());
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/user/notes", notesRouter);
-
-app.get("/", (req, res) => {
-    res.redirect("/auth/signup");
-});
-
-const postSignup = async (req, res) => {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (!existingUser) {
-        if (req.body.password === req.body.confirmPassword) {
-            const hashPass = await bcrypt.hash(req.body.password, 10);
-            const data = await User.create({
-                name: req.body.name,
-                email: req.body.email,
-                password: hashPass,
-            });
-            res.status(200).json(data);
-        } else {
-            res
-                .status(401)
-                .json({ message: "Password and confirm passowords do not match" });
-        }
-    } else {
-        res.status(403).json({ message: "User already exists" });
-    }
-};
-
-const postLogin = async (req, res) => {
-    const existingUser = await User.findOne({ email: req.body.email });
-
-    if (existingUser) {
-        if (bcrypt.compareSync(req.body.password, existingUser.password)) {
-            const uid = existingUser._id;
-            const token = jwt.sign({ uid: uid }, JWT_KEY);
-            res.cookie("login", token);
-            res.status(200).json({ message: `Hello ${existingUser.name}, Welcome` });
-        } else {
-            res.status(401).json({ message: "Invalid password" });
-        }
-    } else {
-        res.status(401).json({ message: "User does not exist" });
-    }
-};
-
-const deleteUser = async (req, res) => {
-    const token = req.cookies.login.split(".")[1];
-    const stringId = Buffer.from(token, "base64").toString("utf8");
-    const uid = JSON.parse(stringId).uid;
-    Note.deleteMany({ user_id: uid }).then(console.log("notes removed"));
-    User.deleteOne({ _id: uid }).then(
-        res
-            .cookie("login", "")
-            .status(400)
-            .send({ message: `User with ID:${uid} has been deleted` })
-    );
-};
-
-const newNote = async (req, res) => {
-    const token = req.cookies.login.split(".")[1];
-    const stringId = Buffer.from(token, "base64").toString("utf8");
-    const uid = JSON.parse(stringId).uid;
-    const note = await Note.create({
-        title: req.body.title,
-        body: req.body.body,
-        user_id: uid,
-    });
-    res.status(200).json({ message: `Note with ID: ${note._id} is created` });
-};
-
-const getNotes = async (req, res) => {
-    const token = req.cookies.login.split(".")[1];
-    const stringId = Buffer.from(token, "base64").toString("utf8");
-    const uid = JSON.parse(stringId).uid;
-    const userNotes = await Note.find({ user_id: uid });
-    console.log(userNotes);
-    res.status(200).send(userNotes);
-};
-
-const getNotebyId = (req, res) => {
-    const note = Note.findOne({ _id: req.params._id });
-};
+// CONTROLLERS
+const postSignup = require('./controllers/postSignup');
+const postLogin = require('./controllers/postLogin');
+const deleteUser = require('./controllers/deleteUser');
+const newNote = require('./controllers/newNote');
+const getNotes = require('./controllers/getNotes')
+const getNotebyId = require('./controllers/getNotebyId')
+// const userProtect = require('./controllers/userProtect')
 
 const userProtect = (req, res, next) => {
     if (req.cookies.login) {
-        const isVerified = jwt.verify(req.cookies.login, JWT_KEY);
+        const isVerified = jwt.verify(req.cookies.login, process.env.JWT_KEY);
         if (isVerified) {
             next();
         } else {
@@ -119,8 +33,27 @@ const userProtect = (req, res, next) => {
     }
 };
 
+const getUid = (req) => {
+    const token = req.cookies.login.split(".")[1];
+    const stringId = Buffer.from(token, "base64").toString("utf8");
+    const uid = JSON.parse(stringId).uid;
+    return uid;
+}
+
+// ROUTERS
+const userRouter = express.Router();
+const authRouter = express.Router();
+const notesRouter = express.Router();
+
+// MIDDLEWARES
+app.use(express.json());
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/user/notes", notesRouter);
 userRouter.use(userProtect);
 notesRouter.use(userProtect);
+
+
 
 authRouter
     .route("/signup")
@@ -132,15 +65,15 @@ authRouter
 
 userRouter.
     route("/delete")
-    .post(deleteUser);
+    .post((req, res)=>deleteUser(req, res, getUid(req)));
 
 notesRouter
     .route("/new")
-    .post(newNote);
+    .post((req, res)=>newNote(req, res, getUid(req)));
 
 notesRouter
     .route("/")
-    .get(getNotes);
+    .get((req, res)=>getNotes(req, res, getUid(req)));
 
 notesRouter
     .route("/:_id")
