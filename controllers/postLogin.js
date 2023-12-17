@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         if (bcrypt.compareSync(req.body.password, existingUser.password)) {
             const uid = existingUser._id;
             const token = jwt.sign({ uid: uid }, process.env.JWT_KEY);
-            res.cookie("login", token);
+            res.cookie("login", token).cookie("uid", uid);
             res.status(200).json({ message: `Hello ${existingUser.name}, Welcome` });
         } else {
             res.status(401).json({ message: "Invalid password" });

@@ -18,10 +18,9 @@ const deleteUser = require('./controllers/deleteUser');
 const newNote = require('./controllers/newNote');
 const getNotes = require('./controllers/getNotes')
 const getNotebyId = require('./controllers/getNotebyId')
-// const userProtect = require('./controllers/userProtect')
 
 const userProtect = (req, res, next) => {
-    if (req.cookies.login) {
+    if (req.cookies.login && req.cookies.uid) {
         const isVerified = jwt.verify(req.cookies.login, process.env.JWT_KEY);
         if (isVerified) {
             next();
@@ -32,13 +31,6 @@ const userProtect = (req, res, next) => {
         res.status(401).json({ message: "User not logged in" });
     }
 };
-
-const getUid = (req) => {
-    const token = req.cookies.login.split(".")[1];
-    const stringId = Buffer.from(token, "base64").toString("utf8");
-    const uid = JSON.parse(stringId).uid;
-    return uid;
-}
 
 // ROUTERS
 const userRouter = express.Router();
@@ -65,11 +57,11 @@ authRouter
 
 userRouter.
     route("/delete")
-    .post((req, res)=>deleteUser(req, res, getUid(req)));
+    .post(deleteUser);
 
 notesRouter
     .route("/new")
-    .post((req, res)=>newNote(req, res, getUid(req)));
+    .post(newNote);
 
 notesRouter
     .route("/")
