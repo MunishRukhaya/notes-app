@@ -17,7 +17,8 @@ const postLogin = require('./controllers/postLogin');
 const deleteUser = require('./controllers/deleteUser');
 const newNote = require('./controllers/newNote');
 const getNotes = require('./controllers/getNotes')
-const getNotebyId = require('./controllers/getNotebyId')
+const getNotebyId = require('./controllers/getNotebyId');
+const deleteNote = require("./controllers/deleteNote");
 
 const userProtect = (req, res, next) => {
     if (req.cookies.login && req.cookies.uid) {
@@ -72,7 +73,7 @@ notesRouter
     .get(getNotebyId);
 
 notesRouter
-    .route("/:_id")
-    .put((req, res) => { });
+    .route("/delete/:_id")
+    .put(deleteNote);
 
 app.listen(process.env.PORT);
