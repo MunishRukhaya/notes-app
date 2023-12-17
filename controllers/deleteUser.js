@@ -7,6 +7,6 @@ module.exports = async (req, res) => {
         res
             .cookie("login", "")
             .status(400)
-            .send({ message: `User with ID:${uid} has been deleted` })
+            .send({ message: `User with ID:${req.cookies.uid} has been deleted` })
     );
 };
